@@ -2,7 +2,7 @@ import { build as viteBuild, InlineConfig } from 'vite';
 import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants';
 import { join } from 'path';
 import type { RollupOutput  } from 'rollup';
-import {writeFile,remove,ensureDir} from 'fs-extra'
+import fs from 'fs-extra'
 
 async function bundle(root: string) {
 
@@ -58,9 +58,9 @@ async function renderPages(render:()=>string,root:string,clientBundle:RollupOutp
 </html>`.trim();
 
 
-  await ensureDir(join(root,'build')) 
-  await writeFile(join(root,'build','index.html'),html)
-  await remove(join(root,'.temp'))
+  await fs.ensureDir(join(root,'build')) 
+  await fs.writeFile(join(root,'build','index.html'),html)
+  await fs.remove(join(root,'.temp'))
 }
 
 
@@ -68,6 +68,6 @@ export async function build(root:string = process.cwd()) {
   const [clientBundle] = await bundle(root)
   const serverEntryPath = join(root,'.temp','ssr-entry.js')
   
-  const {render} = require(serverEntryPath)
+  const {render} = await import(serverEntryPath)
   await renderPages(render,root,clientBundle)
 }
