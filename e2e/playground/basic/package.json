@@ -1,0 +1,17 @@
+{
+  "name": "basic",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "dev": "tiny-island dev docs",
+    "build": "tiny-island build docs",
+    "preview": "tiny-island start docs"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "tiny-island": "../../../"
+  }
+}
