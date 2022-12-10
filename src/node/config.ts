@@ -1,7 +1,7 @@
 import { resolve } from 'path'
 import fse from 'fs-extra'
 import { loadConfigFromFile } from 'vite'
-import type { UserConfig } from '../shared/types'
+import type { SiteData, UserConfig } from '../shared/types'
 
 type RawConfig =
   | UserConfig
@@ -21,7 +21,7 @@ function getUserConfigPath(root: string) {
   }
 }
 
-export async function resolveConfig(
+export async function resolveUserConfig(
   root: string,
   command: 'build' | 'serve',
   mode: 'development' | 'production'
@@ -42,4 +42,34 @@ export async function resolveConfig(
     : rawConfig)
 
   return [configPath, userConfig] as const
+}
+
+export function resolveSiteData(useConfig: UserConfig): UserConfig {
+  const { title, description, themeConfig, vite } = useConfig
+  return {
+    title: title || 'tiny-island.js',
+    description: description || 'ssg framework',
+    themeConfig: themeConfig || {},
+    vite: vite || {}
+  }
+}
+
+export async function resolveConfig(
+  root: string,
+  command: 'build' | 'serve',
+  mode: 'development' | 'production'
+) {
+  const [configPath, userConfig] = await resolveUserConfig(root, command, mode)
+
+  const siteData: SiteData = {
+    root,
+    configPath,
+    siteData: resolveSiteData(userConfig as UserConfig)
+  }
+
+  return siteData
+}
+
+export function defineConfig(config: UserConfig) {
+  return config
 }
