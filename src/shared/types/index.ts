@@ -36,7 +36,7 @@ export interface UserConfig {
   vite?: ViteUserConfig
 }
 
-export interface SiteData {
+export interface SiteConfig {
   root: string
   configPath: string
   siteData: UserConfig
