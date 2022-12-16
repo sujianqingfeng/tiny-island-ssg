@@ -1,6 +1,7 @@
 import type { Plugin } from 'vite'
 import { SiteConfig } from 'shared/types/index'
-import { relative } from 'path'
+import { join, relative } from 'path'
+import { PACKAGE_ROOT } from 'node/constants'
 
 const SITE_DATA_ID = 'tiny-island:site-data'
 
@@ -30,6 +31,16 @@ export function pluginConfig(
           `\n${relative(config.root, ctx.file)} changed, restarting server...`
         )
         await restartServer()
+      }
+    },
+    config() {
+      return {
+        root: PACKAGE_ROOT,
+        resolve: {
+          alias: {
+            '@runtime': join(PACKAGE_ROOT, 'src', 'runtime', 'index.ts')
+          }
+        }
       }
     }
   }

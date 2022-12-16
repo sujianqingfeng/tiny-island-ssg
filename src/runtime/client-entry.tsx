@@ -1,6 +1,8 @@
 import { createRoot } from 'react-dom/client'
 import { App } from './app'
 import siteData from 'tiny-island:site-data'
+import { BrowserRouter } from 'react-router-dom'
+
 console.log('siteData', siteData)
 
 function renderInBrowser() {
@@ -9,7 +11,11 @@ function renderInBrowser() {
     throw new Error('No element with id "root" found')
   }
 
-  createRoot(el).render(<App />)
+  createRoot(el).render(
+    <BrowserRouter>
+      <App />
+    </BrowserRouter>
+  )
 }
 
 renderInBrowser()
