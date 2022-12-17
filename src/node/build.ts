@@ -3,15 +3,22 @@ import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants'
 import { join } from 'path'
 import type { RollupOutput } from 'rollup'
 import fs from 'fs-extra'
+import type { SiteConfig } from 'shared/types'
+import pluginReact from '@vitejs/plugin-react'
+import { pluginConfig } from './plugin-island/config'
 
-async function bundle(root: string) {
+async function bundle(root: string, config: SiteConfig) {
   const resolveViteConfig = (isServer: boolean): InlineConfig => {
     return {
       mode: 'production',
       root,
+      plugins: [pluginReact(), pluginConfig(config)],
+      ssr: {
+        noExternal: ['react-router-dom']
+      },
       build: {
         ssr: isServer,
-        outDir: isServer ? '.temp' : 'build',
+        outDir: isServer ? join(root, '.temp') : join(root, 'build'),
         rollupOptions: {
           input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
           output: {
@@ -67,8 +74,8 @@ async function renderPages(
   await fs.remove(join(root, '.temp'))
 }
 
-export async function build(root: string = process.cwd()) {
-  const [clientBundle] = await bundle(root)
+export async function build(root: string = process.cwd(), config: SiteConfig) {
+  const [clientBundle] = await bundle(root, config)
   const serverEntryPath = join(root, '.temp', 'ssr-entry.js')
 
   const { render } = await import(serverEntryPath)

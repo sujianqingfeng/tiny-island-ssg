@@ -6,11 +6,11 @@ import Index from '../../docs/guide/index'
 
 const routers = [
   {
-    path: '/',
+    path: '/guide',
     element: <Index />
   },
   {
-    path: '/a',
+    path: '/guide/a',
     element: <A />
   },
   {

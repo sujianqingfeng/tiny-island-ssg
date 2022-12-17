@@ -61,13 +61,13 @@ export async function resolveConfig(
 ) {
   const [configPath, userConfig] = await resolveUserConfig(root, command, mode)
 
-  const siteData: SiteConfig = {
+  const siteConfig: SiteConfig = {
     root,
     configPath,
     siteData: resolveSiteData(userConfig as UserConfig)
   }
 
-  return siteData
+  return siteConfig
 }
 
 export function defineConfig(config: UserConfig) {

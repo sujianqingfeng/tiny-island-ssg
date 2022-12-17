@@ -7,7 +7,7 @@ const SITE_DATA_ID = 'tiny-island:site-data'
 
 export function pluginConfig(
   config: SiteConfig,
-  restartServer: () => Promise<void>
+  restartServer?: () => Promise<void>
 ): Plugin {
   return {
     name: 'tiny-island:config',
