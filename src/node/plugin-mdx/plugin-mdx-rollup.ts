@@ -4,9 +4,12 @@ import rehypeSlug from 'rehype-slug'
 import remarkFrontmatter from 'remark-frontmatter'
 import remarkGfm from 'remark-gfm'
 import remarkMdxFrontmatter from 'remark-mdx-frontmatter'
-import { rehypePluginPreWrapper } from './rehype-plugins/pre-wrapper'
+import { getHighlighter } from 'shiki'
 
-export function pluginMdxRollup() {
+import { rehypePluginPreWrapper } from './rehype-plugins/pre-wrapper'
+import { rehypePluginShiki } from './rehype-plugins/shiki'
+
+export async function pluginMdxRollup() {
   return [
     pluginMdx({
       remarkPlugins: [
@@ -33,7 +36,13 @@ export function pluginMdxRollup() {
             }
           }
         ],
-        rehypePluginPreWrapper
+        rehypePluginPreWrapper,
+        [
+          rehypePluginShiki,
+          {
+            highLighter: await getHighlighter({ theme: 'nord' })
+          }
+        ]
       ]
     })
   ]

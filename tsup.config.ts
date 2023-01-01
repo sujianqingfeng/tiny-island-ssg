@@ -6,6 +6,7 @@ export default defineConfig({
   dts: true,
   format: ['cjs', 'esm'],
   outDir: 'dist',
+  external: ['shiki'],
   shims: true,
   clean: true
 })

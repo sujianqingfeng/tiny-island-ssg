@@ -2,8 +2,8 @@ import { cac } from 'cac'
 import { resolve } from 'path'
 import { build } from './build'
 
-import packageJson = require('../../package.json')
 import { resolveConfig } from './config'
+import packageJson from '../../package.json'
 
 const cli = cac('tiny-island').version(packageJson.version).help()
 

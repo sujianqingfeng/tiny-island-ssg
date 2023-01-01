@@ -4,16 +4,16 @@ import { join } from 'path'
 import type { RollupOutput } from 'rollup'
 import fs from 'fs-extra'
 import type { SiteConfig } from 'shared/types'
-import pluginReact from '@vitejs/plugin-react'
-import { pluginConfig } from './plugin-island/config'
 import { createVitePlugin } from './vite-plugins'
 
 async function bundle(root: string, config: SiteConfig) {
-  const resolveViteConfig = (isServer: boolean): InlineConfig => {
+  const resolveViteConfig = async (
+    isServer: boolean
+  ): Promise<InlineConfig> => {
     return {
       mode: 'production',
       root,
-      plugins: createVitePlugin(config),
+      plugins: await createVitePlugin(config),
       ssr: {
         noExternal: ['react-router-dom']
       },
@@ -34,8 +34,8 @@ async function bundle(root: string, config: SiteConfig) {
 
   try {
     const [clientBundle, serverBundle] = await Promise.all([
-      viteBuild(resolveViteConfig(false)),
-      viteBuild(resolveViteConfig(true))
+      viteBuild(await resolveViteConfig(false)),
+      viteBuild(await resolveViteConfig(true))
     ])
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput]
   } catch (error) {
