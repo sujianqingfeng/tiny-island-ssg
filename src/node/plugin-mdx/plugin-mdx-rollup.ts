@@ -8,6 +8,7 @@ import { getHighlighter } from 'shiki'
 
 import { rehypePluginPreWrapper } from './rehype-plugins/pre-wrapper'
 import { rehypePluginShiki } from './rehype-plugins/shiki'
+import { remarkPluginToc } from './remark-plugins/toc'
 
 export async function pluginMdxRollup() {
   return [
@@ -20,7 +21,8 @@ export async function pluginMdxRollup() {
           {
             name: 'frontmatter'
           }
-        ]
+        ],
+        remarkPluginToc
       ],
       rehypePlugins: [
         rehypeSlug,
