@@ -10,6 +10,7 @@ export interface Route {
 
 interface PluginOptions {
   root: string
+  isSSR: boolean
 }
 
 const CONVENTION_ROUTE_ID = 'tiny-island:routes'
@@ -28,7 +29,7 @@ export function pluginRoutes(options: PluginOptions): Plugin {
     },
     load(id) {
       if (id === '\0' + CONVENTION_ROUTE_ID) {
-        return routeService.generateRoutesCode()
+        return routeService.generateRoutesCode(options.isSSR || false)
       }
     }
   }
