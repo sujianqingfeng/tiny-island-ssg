@@ -22,6 +22,7 @@ module.exports = {
     semi: ['error', 'never'],
     quotes: ['error', 'single'],
     'react/react-in-jsx-scope': 'off',
+    'react/no-unknown-property': 'off',
   },
   settings:{
     react:{

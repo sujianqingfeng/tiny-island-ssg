@@ -3,8 +3,10 @@
   "editor.formatOnSave": true,
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "cSpell.words": [
+    "Attributify",
     "rehype",
     "shiki",
-    "unist"
+    "unist",
+    "unocss"
   ]
 }
