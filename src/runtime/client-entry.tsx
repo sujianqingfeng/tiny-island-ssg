@@ -1,20 +1,24 @@
 import { createRoot } from 'react-dom/client'
-import { App } from './app'
+import { App, initPageData } from './app'
 import siteData from 'tiny-island:site-data'
 import { BrowserRouter } from 'react-router-dom'
+import { DataContext } from './hooks'
 
 console.log('siteData', siteData)
 
-function renderInBrowser() {
+async function renderInBrowser() {
   const el = document.getElementById('root')
   if (!el) {
     throw new Error('No element with id "root" found')
   }
 
+  const pageData = await initPageData(location.pathname)
   createRoot(el).render(
-    <BrowserRouter>
-      <App />
-    </BrowserRouter>
+    <DataContext.Provider value={pageData}>
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
+    </DataContext.Provider>
   )
 }
 
