@@ -1,5 +1,8 @@
 import { Content, usePageData } from '@runtime'
 import 'uno.css'
+import '../styles/base.css'
+import '../styles/vars.css'
+import { Nav } from '../components/Nav'
 
 export function Layout() {
   const pageData = usePageData()
@@ -16,5 +19,9 @@ export function Layout() {
     }
   }
 
-  return <div>{getContext()}</div>
+  return (
+    <div>
+      <Nav />
+    </div>
+  )
 }
