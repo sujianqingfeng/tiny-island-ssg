@@ -3,6 +3,7 @@ import 'uno.css'
 import '../styles/base.css'
 import '../styles/vars.css'
 import { Nav } from '../components/Nav'
+import { HomeLayout } from './HomeLayout'
 
 export function Layout() {
   const pageData = usePageData()
@@ -11,7 +12,7 @@ export function Layout() {
 
   const getContext = () => {
     if (pageType === 'home') {
-      return <div>home</div>
+      return <HomeLayout />
     } else if (pageType === 'doc') {
       return <Content></Content>
     } else {
@@ -22,6 +23,7 @@ export function Layout() {
   return (
     <div>
       <Nav />
+      {getContext()}
     </div>
   )
 }
