@@ -6,7 +6,7 @@ const options: VitePluginConfig = {
   presets: [presetAttributify(), presetIcons(), presetWind()],
   rules: [
     [
-      /^divider-(\w)$/,
+      /^divider-(\w+)$/,
       ([, w]) => ({
         [`border-${w}`]: '1px solid var(--island-c-divider-light)'
       })

@@ -2,6 +2,8 @@ import type { Plugin } from 'vite'
 import { SiteConfig } from 'shared/types/index'
 import { join, relative } from 'path'
 import { PACKAGE_ROOT } from 'node/constants'
+import fse from 'fs-extra'
+import sirv from 'sirv'
 
 const SITE_DATA_ID = 'tiny-island:site-data'
 
@@ -46,6 +48,12 @@ export function pluginConfig(
             localsConvention: 'camelCaseOnly'
           }
         }
+      }
+    },
+    configureServer(server) {
+      const publicDir = join(config.root, 'public')
+      if (fse.pathExistsSync(publicDir)) {
+        server.middlewares.use(sirv(publicDir))
       }
     }
   }

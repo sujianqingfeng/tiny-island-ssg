@@ -1,9 +1,10 @@
-import { Content, usePageData } from '@runtime'
+import { usePageData } from '@runtime'
 import 'uno.css'
 import '../styles/base.css'
 import '../styles/vars.css'
 import { Nav } from '../components/Nav'
 import { HomeLayout } from './HomeLayout'
+import { DocLayout } from './DocLayout'
 
 export function Layout() {
   const pageData = usePageData()
@@ -14,7 +15,7 @@ export function Layout() {
     if (pageType === 'home') {
       return <HomeLayout />
     } else if (pageType === 'doc') {
-      return <Content></Content>
+      return <DocLayout />
     } else {
       return <div>404</div>
     }
