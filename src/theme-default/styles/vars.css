@@ -155,6 +155,7 @@
 
 :root {
   --island-layout-max-width: 1440px;
+  --island-aside-width: 268px;
 }
 
 /**
