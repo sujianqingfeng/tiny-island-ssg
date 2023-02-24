@@ -86,6 +86,7 @@ export interface PageModule {
   default: ComponentType
   frontmatter?: FrontMatter
   [key: string]: unknown
+  toc?: Header[]
 }
 
 export interface PageData {

@@ -16,7 +16,8 @@ export async function initPageData(routePath: string): Promise<PageData> {
       pageType: moduleInfo.frontmatter?.pageType ?? 'doc',
       siteData,
       pagePath: routePath,
-      frontmatter: moduleInfo.frontmatter
+      frontmatter: moduleInfo.frontmatter,
+      toc: moduleInfo.toc
     }
   }
 
