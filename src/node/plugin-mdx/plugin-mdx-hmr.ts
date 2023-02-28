@@ -37,6 +37,17 @@ export function pluginMdxHmr(): Plugin {
         }
         return result
       }
+    },
+    handleHotUpdate(ctx) {
+      if (/\.mdx?/.test(ctx.file)) {
+        ctx.server.ws.send({
+          type: 'custom',
+          event: 'mdx-change',
+          data: {
+            filePath: ctx.file
+          }
+        })
+      }
     }
   }
 }

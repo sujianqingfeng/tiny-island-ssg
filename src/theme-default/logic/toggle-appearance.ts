@@ -1,8 +1,7 @@
 const APPEARANCE_KEY = 'appearance'
 
-const classList = document.documentElement.classList
-
 const setClassList = (isDark: boolean) => {
+  const classList = document.documentElement.classList
   if (isDark) {
     classList.add('dark')
   } else {
@@ -21,6 +20,7 @@ if (typeof window !== undefined && typeof localStorage !== 'undefined') {
 }
 
 export function toggle() {
+  const classList = document.documentElement.classList
   const isDark = classList.contains('dark')
   setClassList(!isDark)
   localStorage.setItem(APPEARANCE_KEY, isDark ? 'light' : 'dark')
