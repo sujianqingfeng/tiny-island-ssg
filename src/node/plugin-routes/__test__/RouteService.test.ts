@@ -32,17 +32,17 @@ describe('RouteService', async () => {
 
   test('generate route code', () => {
     const code = routeService
-      .generateRoutesCode()
+      .generateRoutesCode(false)
       .replace(new RegExp(testDir, 'g'), 'TEST_DIR')
     expect(code).toMatchInlineSnapshot(`
       "
           import React from 'react';
-          import loadable from '@loadable/component';
+          import loadable from \\"@loadable/component\\";
           const Route0 = loadable(()=> import('TEST_DIR/b.mdx'));
       const Route1 = loadable(()=> import('TEST_DIR/guide/a.mdx'));
           export const routes =[
-            {path: '/b', element: React.createElement(Route0)},
-      {path: '/guide/a', element: React.createElement(Route1)} 
+            {path: '/b', element: React.createElement(Route0), preload:()=> import('TEST_DIR/b.mdx')},
+      {path: '/guide/a', element: React.createElement(Route1), preload:()=> import('TEST_DIR/guide/a.mdx')} 
           ]
           "
     `)
