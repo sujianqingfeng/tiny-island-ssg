@@ -96,3 +96,7 @@ export interface PageData {
   pageType: PageType
   toc?: Header[]
 }
+
+export type PropsWithIsland = {
+  __island?: boolean
+}

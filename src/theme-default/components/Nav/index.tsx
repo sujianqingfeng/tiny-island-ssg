@@ -3,7 +3,7 @@ import { NavItemWithLink } from 'shared/types'
 import { SwitchAppearance } from '../SwitchAppearance'
 import styles from './index.module.scss'
 
-function MenuItem(item: NavItemWithLink) {
+function MenuItem({ item }: { item: NavItemWithLink }) {
   return (
     <div className="text-sm font-medium mx-3">
       <a href={item.link} className={styles.link}>
@@ -36,7 +36,7 @@ export function Nav() {
         <div flex="~">
           <div flex="~">
             {nav.map((item) => {
-              return <MenuItem {...item} key={item.text} />
+              return <MenuItem item={item} key={item.text} />
             })}
           </div>
           <div>

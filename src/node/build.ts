@@ -45,7 +45,7 @@ async function bundle(root: string, config: SiteConfig) {
 }
 
 async function renderPages(
-  render: (url: string) => string,
+  render: (url: string) => Promise<{ appHtml: string }>,
   routes: Route[],
   root: string,
   clientBundle: RollupOutput
@@ -59,7 +59,7 @@ async function renderPages(
   return Promise.all(
     routes.map(async (route) => {
       const routePath = route.path
-      const appHtml = await render(routePath)
+      const { appHtml } = await render(routePath)
 
       const html = `
 <!DOCTYPE html>

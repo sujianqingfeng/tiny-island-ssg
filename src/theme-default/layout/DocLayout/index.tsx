@@ -30,7 +30,7 @@ export function DocLayout() {
           </div>
         </div>
         <div className={styles.asideContainer}>
-          <Aside headers={toc} />
+          <Aside headers={toc} __island />
         </div>
       </div>
     </div>
