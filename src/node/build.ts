@@ -1,11 +1,16 @@
 import { build as viteBuild, InlineConfig } from 'vite'
-import { CLIENT_ENTRY_PATH, SERVER_ENTRY_PATH } from './constants'
+import {
+  CLIENT_ENTRY_PATH,
+  MASK_SPLITTER,
+  SERVER_ENTRY_PATH
+} from './constants'
 import { dirname, join } from 'path'
 import type { RollupOutput } from 'rollup'
 import fs from 'fs-extra'
 import type { SiteConfig } from 'shared/types'
 import { createVitePlugin } from './vite-plugins'
 import { Route } from './plugin-routes'
+import { RenderResult } from 'runtime/ssr-entry'
 
 async function bundle(root: string, config: SiteConfig) {
   const resolveViteConfig = async (
@@ -44,8 +49,63 @@ async function bundle(root: string, config: SiteConfig) {
   }
 }
 
+async function buildIsLands(
+  root: string,
+  islandPathToMap: Record<string, string>
+) {
+  const islandInjectCode = `${Object.entries(islandPathToMap)
+    .map(
+      ([islandName, islandPath]) =>
+        `import {${islandName}} from '${islandPath}}'`
+    )
+    .join('')}
+  window.ISLANDS = { ${Object.keys(islandPathToMap).join('')} };
+  window.ISLANDS_PROPS = JSON.parse(
+    document.getElementById('islands-props').textContent
+  )
+  `
+  const injectId = 'island:inject'
+
+  return viteBuild({
+    mode: 'production',
+    build: {
+      outDir: join(root, '.temp'),
+      rollupOptions: {
+        input: injectId
+      }
+    },
+    plugins: [
+      {
+        name: 'island:inject',
+        enforce: 'post',
+        resolveId(id) {
+          if (id.includes(MASK_SPLITTER)) {
+            const [originId, importer] = id.split(MASK_SPLITTER)
+            return this.resolve(originId, importer, { skipSelf: true })
+          }
+          if (id === injectId) {
+            return id
+          }
+        },
+        load(id) {
+          if (id === injectId) {
+            return islandInjectCode
+          }
+        },
+        generateBundle(_, bundle) {
+          for (const name in bundle) {
+            if (bundle[name].type === 'asset') {
+              delete bundle[name]
+            }
+          }
+        }
+      }
+    ]
+  })
+}
+
 async function renderPages(
-  render: (url: string) => Promise<{ appHtml: string }>,
+  render: (url: string) => Promise<RenderResult>,
   routes: Route[],
   root: string,
   clientBundle: RollupOutput
@@ -59,8 +119,8 @@ async function renderPages(
   return Promise.all(
     routes.map(async (route) => {
       const routePath = route.path
-      const { appHtml } = await render(routePath)
-
+      const { appHtml, islandToPathMap } = await render(routePath)
+      await buildIsLands(root, islandToPathMap)
       const html = `
 <!DOCTYPE html>
 <html>
