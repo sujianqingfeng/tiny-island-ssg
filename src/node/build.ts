@@ -1,7 +1,9 @@
 import { build as viteBuild, InlineConfig } from 'vite'
 import {
   CLIENT_ENTRY_PATH,
+  EXTERNALS,
   MASK_SPLITTER,
+  PACKAGE_ROOT,
   SERVER_ENTRY_PATH
 } from './constants'
 import { dirname, join } from 'path'
@@ -11,6 +13,8 @@ import type { SiteConfig } from 'shared/types'
 import { createVitePlugin } from './vite-plugins'
 import { Route } from './plugin-routes'
 import { RenderResult } from 'runtime/ssr-entry'
+
+const CLIENT_OUTPUT = 'build'
 
 async function bundle(root: string, config: SiteConfig) {
   const resolveViteConfig = async (
@@ -30,7 +34,8 @@ async function bundle(root: string, config: SiteConfig) {
           input: isServer ? SERVER_ENTRY_PATH : CLIENT_ENTRY_PATH,
           output: {
             format: isServer ? 'cjs' : 'esm'
-          }
+          },
+          external: EXTERNALS
         }
       }
     }
@@ -43,6 +48,7 @@ async function bundle(root: string, config: SiteConfig) {
       viteBuild(await resolveViteConfig(false)),
       viteBuild(await resolveViteConfig(true))
     ])
+    await fs.copy(join(PACKAGE_ROOT, 'vendors'), join(root, CLIENT_OUTPUT))
     return [clientBundle, serverBundle] as [RollupOutput, RollupOutput]
   } catch (error) {
     console.error(error)
@@ -68,10 +74,14 @@ async function buildIsLands(
 
   return viteBuild({
     mode: 'production',
+    esbuild: {
+      jsx: 'automatic'
+    },
     build: {
       outDir: join(root, '.temp'),
       rollupOptions: {
-        input: injectId
+        input: injectId,
+        external: EXTERNALS
       }
     },
     plugins: [
@@ -120,7 +130,12 @@ async function renderPages(
     routes.map(async (route) => {
       const routePath = route.path
       const { appHtml, islandToPathMap } = await render(routePath)
+      const styleAssets = clientBundle.output.filter(
+        (chunk) => chunk.type === 'asset' && chunk.fileName.endsWith('.css')
+      )
       await buildIsLands(root, islandToPathMap)
+      const normalizeVendorFilename = (fileName: string) =>
+        fileName.replace(/\//g, '_') + '.js'
       const html = `
 <!DOCTYPE html>
 <html>
@@ -129,6 +144,18 @@ async function renderPages(
     <meta name="viewport" content="width=device-width,initial-scale=1">
     <title>title</title>
     <meta name="description" content="xxx">
+      ${styleAssets
+        .map((item) => `<link rel="stylesheet" href="/${item.fileName}">`)
+        .join('\n')}
+    <script type="importmap">
+      {
+        "imports": {
+          ${EXTERNALS.map(
+            (name) => `"${name}": "/${normalizeVendorFilename(name)}"`
+          ).join(',')}
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="root">${appHtml}</div>
