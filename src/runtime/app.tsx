@@ -17,7 +17,8 @@ export async function initPageData(routePath: string): Promise<PageData> {
       siteData,
       pagePath: routePath,
       frontmatter: moduleInfo.frontmatter,
-      toc: moduleInfo.toc
+      toc: moduleInfo.toc,
+      title: moduleInfo.title
     }
   }
 
@@ -25,7 +26,8 @@ export async function initPageData(routePath: string): Promise<PageData> {
     pageType: '404',
     siteData: siteData,
     pagePath: routePath,
-    frontmatter: {}
+    frontmatter: {},
+    title: '404'
   }
 }
 

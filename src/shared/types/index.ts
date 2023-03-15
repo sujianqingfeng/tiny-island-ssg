@@ -87,6 +87,7 @@ export interface PageModule {
   frontmatter?: FrontMatter
   [key: string]: unknown
   toc?: Header[]
+  title?: string
 }
 
 export interface PageData {
@@ -95,6 +96,7 @@ export interface PageData {
   frontmatter: FrontMatter
   pageType: PageType
   toc?: Header[]
+  title: string
 }
 
 export type PropsWithIsland = {

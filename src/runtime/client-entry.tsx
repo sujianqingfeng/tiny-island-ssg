@@ -3,6 +3,7 @@ import { App, initPageData } from './app'
 import siteData from 'tiny-island:site-data'
 import { BrowserRouter } from 'react-router-dom'
 import { DataContext } from './hooks'
+import { HelmetProvider } from 'react-helmet-async'
 
 console.log('siteData', siteData)
 
@@ -14,11 +15,13 @@ async function renderInBrowser() {
 
   const pageData = await initPageData(location.pathname)
   createRoot(el).render(
-    <DataContext.Provider value={pageData}>
-      <BrowserRouter>
-        <App />
-      </BrowserRouter>
-    </DataContext.Provider>
+    <HelmetProvider>
+      <DataContext.Provider value={pageData}>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </DataContext.Provider>
+    </HelmetProvider>
   )
 }
 
