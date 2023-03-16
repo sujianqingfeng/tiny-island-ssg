@@ -4,6 +4,7 @@ import { build } from './build'
 
 import { resolveConfig } from './config'
 import packageJson from '../../package.json'
+import { preview } from './preview'
 
 const cli = cac('tiny-island').version(packageJson.version).help()
 
@@ -34,6 +35,18 @@ cli
       await build(root, config)
     } catch (error) {
       console.error(error)
+    }
+  })
+
+cli
+  .command('preview [root]', 'preview production build')
+  .option('--port <port>', 'port to use for preview server')
+  .action(async (root: string, { port }: { port: number }) => {
+    try {
+      root = resolve(root)
+      await preview(root, { port })
+    } catch (e) {
+      console.log(e)
     }
   })
 
